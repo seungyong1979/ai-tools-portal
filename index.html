@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools Portal - 다양한 AI 도구를 한 곳에서</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX"
+         crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-primary: #000000;
+            --text-secondary: #666666;
+            --accent: #000000;
+            --accent-hover: #333333;
+            --border: #e0e0e0;
+            --gradient: linear-gradient(135deg, #000000 0%, #333333 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 2px solid var(--border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .search-section {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .tool-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .tool-category {
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tool-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .tool-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .tool-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .tool-link:hover {
+            color: var(--accent-hover);
+        }
+
+        .tool-link i {
+            margin-left: 0.5rem;
+        }
+
+        .recommended {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .bookmark-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .bookmark-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .bookmark-btn:hover {
+            background: var(--bg-secondary);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .bookmark-btn span {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                gap: 0.25rem;
+            }
+
+            .filter-btn {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 2px solid var(--border);
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-copyright {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .footer-copyright p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-copyright a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-copyright a:hover {
+            color: var(--accent-hover);
+        }
+
+        .footer-description {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-description p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .footer-contact {
+            margin-top: 1rem;
+        }
+
+        .footer-contact a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-contact a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                padding: 2rem 0 1.5rem;
+            }
+
+            .footer-description p {
+                font-size: 0.9rem;
+            }
+
+            .footer-contact p {
+                font-size: 0.85rem;
+                line-height: 1.5;
+            }
+        }
+
+        /* AdSense Styling */
+        .ad-container {
+            margin: 2rem auto;
+            text-align: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            background: var(--bg-secondary);
+        }
+
+        .ad-banner {
+            max-width: 728px;
+            min-height: 90px;
+        }
+
+        .ad-rectangle {
+            max-width: 336px;
+            min-height: 280px;
+        }
+
+        .ad-container::before {
+            content: '광고';
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .ad-container {
+                margin: 1rem 0;
+                padding: 0.5rem;
+            }
+            
+            .ad-banner {
+                max-width: 320px;
+                min-height: 50px;
+            }
+            
+            .ad-rectangle {
+                max-width: 300px;
+                min-height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">🤖 SIMDA : AI Tools Portal</div>
+                <div class="bookmark-section">
+                    <button class="bookmark-btn" onclick="addToBookmarks()">
+                        <i class="fas fa-heart" style="color: var(--accent);"></i>
+                        <span>즐겨찾기</span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>AI 도구 포털</h1>
+                <p>다양한 생성형 AI 툴을 발견하고 쉽게 사용해보세요</p>
+                
+                <!-- Top Banner Ad -->
+                <div class="ad-container ad-banner">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+                         data-ad-slot="XXXXXXXXXX"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                </div>
+                
+                <div class="search-section">
+                    <div class="filters" id="filters">
+                        <button class="filter-btn active" data-category="all">전체</button>
+                        <button class="filter-btn" data-category="대화형AI">대화형 AI</button>
+                        <button class="filter-btn" data-category="이미지">이미지</button>
+                        <button class="filter-btn" data-category="텍스트">텍스트</button>
+                        <button class="filter-btn" data-category="개발">개발</button>
+                        <button class="filter-btn" data-category="음성">음성</button>
+                        <button class="filter-btn" data-category="비디오">비디오</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container">
+            <!-- Middle Rectangle Ad -->
+            <div class="ad-container ad-rectangle">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+                     data-ad-slot="XXXXXXXXXX"
+                     data-ad-format="rectangle"></ins>
+            </div>
+            
+            <div class="tools-grid" id="toolsGrid">
+                <!-- Tools will be dynamically rendered here -->
+            </div>
+            
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <i class="fas fa-search"></i>
+                <h3>검색 결과가 없습니다</h3>
+                <p>다른 키워드로 다시 검색해보세요</p>
+            </div>
+            
+            <!-- Bottom Banner Ad -->
+            <div class="ad-container ad-banner">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+                     data-ad-slot="XXXXXXXXXX"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-copyright">
+                    <p>© 2025 SIMDA | Made by seungyong with <a href="https://claude.ai" target="_blank">Claude Code</a> and <a href="https://chat.openai.com" target="_blank">ChatGPT</a></p>
+                </div>
+                <div class="footer-description">
+                    <p>이곳은 다양한 AI 도구들을 한눈에 보고 직접 사용해볼 수 있는 실험적인 공간입니다.</p>
+                    <p>AI의 변화와 가능성이 상상력을 확장하는데 도움이 되기를 바랍니다.</p>
+                    <p>개선 의견이 있다면 언제든지 연락 주세요 :)</p>
+                </div>
+                <div class="footer-contact">
+                    <p>
+                        <a href="mailto:simdabooks@naver.com">simdabooks@naver.com</a> / 
+                        <a href="mailto:i_like_moon@naver.com">i_like_moon@naver.com</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const aiTools = [
+            {
+                name: "ChatGPT",
+                category: "대화형AI",
+                description: "OpenAI에서 개발한 고성능 대화형 AI 모델로, 다양한 질문과 작업을 처리할 수 있습니다.",
+                tags: ["대화", "텍스트생성", "Q&A"],
+                url: "https://chat.openai.com",
+                icon: "💬",
+                recommended: true
+            },
+            {
+                name: "Claude",
+                category: "대화형AI", 
+                description: "Anthropic에서 개발한 안전하고 유용한 AI 어시스턴트입니다.",
+                tags: ["대화", "분석", "안전성"],
+                url: "https://claude.ai",
+                icon: "🤖"
+            },
+            {
+                name: "Gemini",
+                category: "대화형AI",
+                description: "Google의 차세대 AI 모델로 텍스트, 이미지, 코드를 이해할 수 있습니다.",
+                tags: ["멀티모달", "코딩", "분석"],
+                url: "https://gemini.google.com",
+                icon: "✨"
+            },
+            {
+                name: "DALL-E 3",
+                category: "이미지",
+                description: "텍스트 설명으로부터 고품질 이미지를 생성하는 AI 도구입니다.",
+                tags: ["이미지생성", "아트", "창작"],
+                url: "https://openai.com/dall-e-3",
+                icon: "🎨"
+            },
+            {
+                name: "Midjourney",
+                category: "이미지",
+                description: "아티스틱한 고품질 이미지를 생성하는 인기 있는 AI 도구입니다.",
+                tags: ["아트", "창작", "디자인"],
+                url: "https://midjourney.com",
+                icon: "🖼️",
+                recommended: true
+            },
+            {
+                name: "Stable Diffusion",
+                category: "이미지",
+                description: "오픈소스 이미지 생성 AI로 다양한 스타일의 이미지를 만들 수 있습니다.",
+                tags: ["오픈소스", "이미지생성", "커스터마이징"],
+                url: "https://stability.ai",
+                icon: "🎭"
+            },
+            {
+                name: "GitHub Copilot",
+                category: "개발",
+                description: "AI 기반 코드 완성 도구로 개발 생산성을 크게 향상시킵니다.",
+                tags: ["코딩", "자동완성", "개발"],
+                url: "https://github.com/features/copilot",
+                icon: "👨‍💻"
+            },
+            {
+                name: "Cursor",
+                category: "개발",
+                description: "AI가 내장된 코드 에디터로 자연어로 코딩할 수 있습니다.",
+                tags: ["에디터", "AI코딩", "생산성"],
+                url: "https://cursor.sh",
+                icon: "⌨️"
+            },
+            {
+                name: "Notion AI",
+                category: "텍스트",
+                description: "Notion 워크스페이스에 통합된 AI 라이팅 어시스턴트입니다.",
+                tags: ["문서작성", "정리", "생산성"],
+                url: "https://notion.so/product/ai",
+                icon: "📝"
+            },
+            {
+                name: "ElevenLabs",
+                category: "음성",
+                description: "자연스러운 음성을 생성하고 복제할 수 있는 AI 음성 도구입니다.",
+                tags: ["음성생성", "TTS", "더빙"],
+                url: "https://elevenlabs.io",
+                icon: "🎙️"
+            },
+            {
+                name: "Runway",
+                category: "비디오",
+                description: "AI를 활용한 비디오 편집 및 생성 도구입니다.",
+                tags: ["비디오편집", "영상생성", "창작"],
+                url: "https://runwayml.com",
+                icon: "🎬"
+            },
+            {
+                name: "Luma AI",
+                category: "비디오",
+                description: "텍스트로부터 고품질 비디오를 생성하는 AI 도구입니다.",
+                tags: ["비디오생성", "3D", "영상"],
+                url: "https://lumalabs.ai",
+                icon: "📹"
+            },
+            {
+                name: "Perplexity",
+                category: "대화형AI",
+                description: "실시간 검색 기반의 AI 검색 엔진으로 최신 정보를 제공합니다.",
+                tags: ["검색", "실시간", "정보"],
+                url: "https://perplexity.ai",
+                icon: "🔍"
+            },
+            {
+                name: "Poe",
+                category: "대화형AI",
+                description: "Quora에서 개발한 다양한 AI 모델을 사용할 수 있는 플랫폼입니다.",
+                tags: ["멀티모델", "대화", "플랫폼"],
+                url: "https://poe.com",
+                icon: "🌟"
+            },
+            {
+                name: "Character.AI",
+                category: "대화형AI",
+                description: "캐릭터와 대화할 수 있는 AI 챗봇 플랫폼입니다.",
+                tags: ["캐릭터", "롤플레이", "대화"],
+                url: "https://character.ai",
+                icon: "🎭"
+            },
+            {
+                name: "Leonardo AI",
+                category: "이미지",
+                description: "게임과 창작에 특화된 AI 이미지 생성 도구입니다.",
+                tags: ["게임아트", "창작", "고품질"],
+                url: "https://leonardo.ai",
+                icon: "🎮"
+            },
+            {
+                name: "Ideogram",
+                category: "이미지",
+                description: "텍스트가 포함된 이미지 생성에 특화된 AI 도구입니다.",
+                tags: ["텍스트삽입", "로고", "포스터"],
+                url: "https://ideogram.ai",
+                icon: "✍️"
+            },
+            {
+                name: "Canva AI",
+                category: "이미지",
+                description: "디자인에 특화된 AI 기능이 내장된 온라인 디자인 플랫폼입니다.",
+                tags: ["디자인", "템플릿", "마케팅"],
+                url: "https://canva.com",
+                icon: "🎨",
+                recommended: true
+            },
+            {
+                name: "Figma AI",
+                category: "이미지",
+                description: "Figma에 통합된 AI 디자인 어시스턴트입니다.",
+                tags: ["UI/UX", "디자인", "협업"],
+                url: "https://figma.com",
+                icon: "🖌️"
+            },
+            {
+                name: "Grammarly",
+                category: "텍스트",
+                description: "AI 기반 문법 교정 및 글쓰기 개선 도구입니다.",
+                tags: ["문법교정", "글쓰기", "영어"],
+                url: "https://grammarly.com",
+                icon: "✏️"
+            },
+            {
+                name: "Jasper",
+                category: "텍스트",
+                description: "마케팅 콘텐츠 작성에 특화된 AI 라이팅 도구입니다.",
+                tags: ["마케팅", "콘텐츠", "카피라이팅"],
+                url: "https://jasper.ai",
+                icon: "📝"
+            },
+            {
+                name: "Copy.ai",
+                category: "텍스트",
+                description: "다양한 마케팅 텍스트를 생성하는 AI 도구입니다.",
+                tags: ["카피라이팅", "광고", "이메일"],
+                url: "https://copy.ai",
+                icon: "📄"
+            },
+            {
+                name: "DeepL",
+                category: "텍스트",
+                description: "AI 기반 고품질 번역 서비스입니다.",
+                tags: ["번역", "다국어", "정확성"],
+                url: "https://deepl.com",
+                icon: "🌐"
+            },
+            {
+                name: "Replit AI",
+                category: "개발",
+                description: "온라인 IDE에 통합된 AI 코딩 어시스턴트입니다.",
+                tags: ["온라인IDE", "코딩", "협업"],
+                url: "https://replit.com",
+                icon: "💻"
+            },
+            {
+                name: "Tabnine",
+                category: "개발",
+                description: "다양한 IDE를 지원하는 AI 코드 완성 도구입니다.",
+                tags: ["자동완성", "IDE", "생산성"],
+                url: "https://tabnine.com",
+                icon: "⚡"
+            },
+            {
+                name: "CodeWhisperer",
+                category: "개발",
+                description: "Amazon에서 개발한 AI 기반 코드 생성 도구입니다.",
+                tags: ["AWS", "코드생성", "보안"],
+                url: "https://aws.amazon.com/codewhisperer",
+                icon: "☁️"
+            },
+            {
+                name: "Codeium",
+                category: "개발",
+                description: "무료로 제공되는 AI 코드 완성 도구입니다.",
+                tags: ["무료", "자동완성", "다국어"],
+                url: "https://codeium.com",
+                icon: "🆓"
+            },
+            {
+                name: "Murf",
+                category: "음성",
+                description: "자연스러운 AI 보이스오버 생성 도구입니다.",
+                tags: ["보이스오버", "내레이션", "다국어"],
+                url: "https://murf.ai",
+                icon: "🎤"
+            },
+            {
+                name: "Speechify",
+                category: "음성",
+                description: "텍스트를 자연스러운 음성으로 변환하는 도구입니다.",
+                tags: ["TTS", "읽기", "접근성"],
+                url: "https://speechify.com",
+                icon: "🔊"
+            },
+            {
+                name: "Otter.ai",
+                category: "음성",
+                description: "실시간 음성 인식 및 회의 노트 생성 도구입니다.",
+                tags: ["음성인식", "회의", "노트"],
+                url: "https://otter.ai",
+                icon: "📝"
+            },
+            {
+                name: "Suno",
+                category: "음성",
+                description: "AI로 음악과 노래를 생성하는 도구입니다.",
+                tags: ["음악생성", "작곡", "창작"],
+                url: "https://suno.ai",
+                icon: "🎵",
+                recommended: true
+            },
+            {
+                name: "Synthesia",
+                category: "비디오",
+                description: "AI 아바타를 활용한 비디오 생성 플랫폼입니다.",
+                tags: ["아바타", "프레젠테이션", "교육"],
+                url: "https://synthesia.io",
+                icon: "👤"
+            },
+            {
+                name: "Pictory",
+                category: "비디오",
+                description: "텍스트로부터 쇼트폼 비디오를 생성하는 AI 도구입니다.",
+                tags: ["쇼트폼", "소셜미디어", "자동편집"],
+                url: "https://pictory.ai",
+                icon: "📱"
+            },
+            {
+                name: "Invideo AI",
+                category: "비디오",
+                description: "AI 기반 비디오 편집 및 생성 플랫폼입니다.",
+                tags: ["편집", "템플릿", "마케팅"],
+                url: "https://invideo.io",
+                icon: "🎞️"
+            },
+            {
+                name: "Descript",
+                category: "비디오",
+                description: "텍스트 편집으로 비디오를 수정할 수 있는 혁신적인 도구입니다.",
+                tags: ["텍스트편집", "팟캐스트", "자막"],
+                url: "https://descript.com",
+                icon: "✂️"
+            },
+            {
+                name: "Pika Labs",
+                category: "비디오",
+                description: "텍스트와 이미지로부터 비디오를 생성하는 AI 도구입니다.",
+                tags: ["비디오생성", "애니메이션", "창작"],
+                url: "https://pika.art",
+                icon: "🎬"
+            }
+        ];
+
+        let filteredTools = [...aiTools];
+        let currentCategory = 'all';
+
+        function renderTools() {
+            const toolsGrid = document.getElementById('toolsGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (filteredTools.length === 0) {
+                toolsGrid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            toolsGrid.style.display = 'grid';
+            emptyState.style.display = 'none';
+            
+            toolsGrid.innerHTML = filteredTools.map(tool => `
+                <div class="tool-card" onclick="openTool('${tool.url}')">
+                    ${tool.recommended ? '<div class="recommended">추천</div>' : ''}
+                    <div class="tool-header">
+                        <div class="tool-icon">${tool.icon}</div>
+                        <div class="tool-info">
+                            <h3>${tool.name}</h3>
+                            <div class="tool-category">${tool.category}</div>
+                        </div>
+                    </div>
+                    <div class="tool-description">${tool.description}</div>
+                    <div class="tool-tags">
+                        ${tool.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                    <a href="${tool.url}" class="tool-link" target="_blank" onclick="event.stopPropagation()">
+                        사용하기 <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            `).join('');
+        }
+
+
+        function filterTools() {
+            filteredTools = aiTools.filter(tool => {
+                const matchesCategory = currentCategory === 'all' || tool.category === currentCategory;
+                return matchesCategory;
+            });
+            
+            renderTools();
+        }
+
+        function openTool(url) {
+            window.open(url, '_blank');
+        }
+
+        // Event listeners
+
+        document.getElementById('filters').addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-btn')) {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                currentCategory = e.target.dataset.category;
+                filterTools();
+            }
+        });
+
+        // Bookmark functionality
+        function addToBookmarks() {
+            const title = document.title;
+            const url = window.location.href;
+            
+            // Try modern browsers first
+            if (window.sidebar && window.sidebar.addPanel) {
+                // Firefox
+                window.sidebar.addPanel(title, url, '');
+            } else if (window.external && ('AddFavorite' in window.external)) {
+                // Internet Explorer
+                window.external.AddFavorite(url, title);
+            } else if (window.opera && window.print) {
+                // Opera
+                const elem = document.createElement('a');
+                elem.setAttribute('href', url);
+                elem.setAttribute('title', title);
+                elem.setAttribute('rel', 'sidebar');
+                elem.click();
+            } else {
+                // For Chrome, Safari and other modern browsers
+                // Show instruction modal since they don't support programmatic bookmarking
+                showBookmarkInstructions();
+            }
+        }
+        
+        function showBookmarkInstructions() {
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const shortcut = isMac ? 'Cmd + D' : 'Ctrl + D';
+            
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+            `;
+            
+            const content = document.createElement('div');
+            content.style.cssText = `
+                background: var(--bg-card);
+                padding: 2rem;
+                border-radius: 12px;
+                text-align: center;
+                max-width: 400px;
+                margin: 1rem;
+                border: 1px solid var(--border);
+            `;
+            
+            content.innerHTML = `
+                <h3 style="margin-bottom: 1rem; color: var(--text-primary);">즐겨찾기 추가</h3>
+                <p style="margin-bottom: 1.5rem; color: var(--text-secondary); line-height: 1.5;">
+                    이 사이트를 즐겨찾기에 추가하려면<br>
+                    <strong style="color: var(--accent);">${shortcut}</strong> 키를 눌러주세요
+                </p>
+                <button onclick="this.parentElement.parentElement.remove()" 
+                        style="background: var(--accent); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">
+                    확인
+                </button>
+            `;
+            
+            modal.appendChild(content);
+            document.body.appendChild(modal);
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        // Initialize AdSense
+        function initializeAds() {
+            try {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            } catch (e) {
+                console.log('AdSense initialization failed:', e);
+            }
+        }
+
+        // Initial render
+        renderTools();
+        
+        // Initialize ads after page load
+        window.addEventListener('load', initializeAds);
+    </script>
+</body>
+</html>
