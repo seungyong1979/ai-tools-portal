@@ -9,6 +9,19 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2468692887812723"
          crossorigin="anonymous"></script>
+    
+    <!-- Google Translate -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'ko',
+                includedLanguages: 'en,ja,zh-cn,zh-tw,es,fr,de,ru,pt,it,ar,hi,th,vi',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <style>
         :root {
             --bg-primary: #ffffff;
@@ -229,9 +242,78 @@
             opacity: 0.5;
         }
 
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
         .bookmark-section {
             display: flex;
             align-items: center;
+        }
+
+        .language-selector {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .lang-btn:hover {
+            background: var(--bg-secondary);
+            transform: translateY(-2px);
+        }
+
+        .lang-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            min-width: 150px;
+            z-index: 1000;
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .lang-dropdown.show {
+            display: block;
+        }
+
+        .lang-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .lang-option:hover {
+            background: var(--bg-secondary);
+        }
+
+        .lang-option:first-child {
+            border-radius: 8px 8px 0 0;
+        }
+
+        .lang-option:last-child {
+            border-radius: 0 0 8px 8px;
         }
 
         .bookmark-btn {
@@ -260,6 +342,14 @@
 
             .bookmark-btn span {
                 display: none;
+            }
+
+            .lang-text {
+                display: none;
+            }
+
+            .nav-right {
+                gap: 0.5rem;
             }
 
             .hero h1 {
@@ -408,12 +498,42 @@
         <div class="container">
             <nav class="nav">
                 <div class="logo">🤖 SIMDA : AI Tools Portal</div>
-                <div class="bookmark-section">
-                    <button class="bookmark-btn" onclick="addToBookmarks()">
-                        <i class="fas fa-heart" style="color: var(--accent);"></i>
-                        <span>즐겨찾기</span>
-                    </button>
+                <div class="nav-right">
+                    <!-- Language Selector -->
+                    <div class="language-selector">
+                        <button class="lang-btn" onclick="toggleLanguageMenu()">
+                            <i class="fas fa-globe"></i>
+                            <span class="lang-text">언어</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <div class="lang-option" onclick="setLanguage('ko')">한국어</div>
+                            <div class="lang-option" onclick="setLanguage('en')">영어</div>
+                            <div class="lang-option" onclick="setLanguage('ja')">일본어</div>
+                            <div class="lang-option" onclick="setLanguage('zh-cn')">중국어(간체)</div>
+                            <div class="lang-option" onclick="setLanguage('zh-tw')">중국어(번체)</div>
+                            <div class="lang-option" onclick="setLanguage('es')">스페인어</div>
+                            <div class="lang-option" onclick="setLanguage('fr')">프랑스어</div>
+                            <div class="lang-option" onclick="setLanguage('de')">독일어</div>
+                            <div class="lang-option" onclick="setLanguage('ru')">러시아어</div>
+                            <div class="lang-option" onclick="setLanguage('pt')">포르투갈어</div>
+                            <div class="lang-option" onclick="setLanguage('it')">이탈리아어</div>
+                            <div class="lang-option" onclick="setLanguage('ar')">아랍어</div>
+                            <div class="lang-option" onclick="setLanguage('hi')">힌디어</div>
+                            <div class="lang-option" onclick="setLanguage('th')">태국어</div>
+                            <div class="lang-option" onclick="setLanguage('vi')">베트남어</div>
+                        </div>
+                    </div>
+                    <div class="bookmark-section">
+                        <button class="bookmark-btn" onclick="addToBookmarks()">
+                            <i class="fas fa-heart" style="color: var(--accent);"></i>
+                            <span>즐겨찾기</span>
+                        </button>
+                    </div>
                 </div>
+                
+                <!-- Hidden Google Translate Element -->
+                <div id="google_translate_element" style="display: none;"></div>
             </nav>
         </div>
     </header>
@@ -931,8 +1051,68 @@
         // Initial render
         renderTools();
         
+        // Language functionality
+        function toggleLanguageMenu() {
+            const dropdown = document.getElementById('langDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function setLanguage(langCode) {
+            const dropdown = document.getElementById('langDropdown');
+            dropdown.classList.remove('show');
+            
+            // Use Google Translate to change language
+            const translateElement = document.querySelector('.goog-te-combo');
+            if (translateElement) {
+                translateElement.value = langCode;
+                translateElement.dispatchEvent(new Event('change'));
+            } else {
+                // Fallback: trigger Google Translate programmatically
+                setTimeout(() => {
+                    const selectElement = document.querySelector('.goog-te-combo');
+                    if (selectElement) {
+                        selectElement.value = langCode;
+                        selectElement.dispatchEvent(new Event('change'));
+                    }
+                }, 1000);
+            }
+        }
+
+        // Auto-detect user's language based on browser language
+        function detectUserLanguage() {
+            const browserLang = navigator.language || navigator.userLanguage;
+            const langCode = browserLang.split('-')[0];
+            
+            // Supported languages mapping
+            const supportedLangs = {
+                'en': 'en', 'ja': 'ja', 'zh': 'zh-cn', 'es': 'es', 
+                'fr': 'fr', 'de': 'de', 'ru': 'ru', 'pt': 'pt', 
+                'it': 'it', 'ar': 'ar', 'hi': 'hi', 'th': 'th', 'vi': 'vi'
+            };
+            
+            // Auto-translate if not Korean
+            if (langCode !== 'ko' && supportedLangs[langCode]) {
+                setTimeout(() => {
+                    setLanguage(supportedLangs[langCode]);
+                }, 2000);
+            }
+        }
+
+        // Close language dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const languageSelector = document.querySelector('.language-selector');
+            const dropdown = document.getElementById('langDropdown');
+            
+            if (!languageSelector.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
         // Initialize ads after page load
-        window.addEventListener('load', initializeAds);
+        window.addEventListener('load', function() {
+            initializeAds();
+            detectUserLanguage();
+        });
     </script>
 </body>
 </html>
