@@ -16,8 +16,9 @@
             new google.translate.TranslateElement({
                 pageLanguage: 'ko',
                 includedLanguages: 'en,ja,zh-cn,zh-tw,es,fr,de,ru,pt,it,ar,hi,th,vi',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
+                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+                autoDisplay: false,
+                multilanguagePage: true
             }, 'google_translate_element');
         }
     </script>
@@ -1061,20 +1062,29 @@
             const dropdown = document.getElementById('langDropdown');
             dropdown.classList.remove('show');
             
-            // Use Google Translate to change language
-            const translateElement = document.querySelector('.goog-te-combo');
-            if (translateElement) {
-                translateElement.value = langCode;
-                translateElement.dispatchEvent(new Event('change'));
-            } else {
-                // Fallback: trigger Google Translate programmatically
-                setTimeout(() => {
-                    const selectElement = document.querySelector('.goog-te-combo');
-                    if (selectElement) {
-                        selectElement.value = langCode;
-                        selectElement.dispatchEvent(new Event('change'));
+            // Wait for Google Translate to load and then trigger translation
+            function triggerTranslation() {
+                const translateElement = document.querySelector('.goog-te-combo');
+                if (translateElement) {
+                    translateElement.value = langCode;
+                    const event = new Event('change', { bubbles: true });
+                    translateElement.dispatchEvent(event);
+                    return true;
+                }
+                return false;
+            }
+            
+            // Try immediately first
+            if (!triggerTranslation()) {
+                // If not loaded, wait and try again
+                let attempts = 0;
+                const maxAttempts = 10;
+                const interval = setInterval(() => {
+                    attempts++;
+                    if (triggerTranslation() || attempts >= maxAttempts) {
+                        clearInterval(interval);
                     }
-                }, 1000);
+                }, 500);
             }
         }
 
@@ -1094,7 +1104,7 @@
             if (langCode !== 'ko' && supportedLangs[langCode]) {
                 setTimeout(() => {
                     setLanguage(supportedLangs[langCode]);
-                }, 2000);
+                }, 3000); // Increased delay to ensure Google Translate is fully loaded
             }
         }
 
@@ -1108,10 +1118,38 @@
             }
         });
 
+        // Hide Google Translate bar styling
+        function hideGoogleTranslateToolbar() {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .goog-te-banner-frame.skiptranslate { display: none !important; }
+                body { top: 0px !important; }
+                .goog-te-combo { 
+                    background: var(--bg-card) !important;
+                    border: 1px solid var(--border) !important;
+                    color: var(--text-primary) !important;
+                    padding: 4px !important;
+                    border-radius: 4px !important;
+                }
+                #google_translate_element .goog-te-gadget-simple {
+                    background: transparent !important;
+                    border: none !important;
+                    font-size: 0 !important;
+                }
+                #google_translate_element .goog-te-gadget-simple .goog-te-menu-value {
+                    font-size: 12px !important;
+                    color: var(--text-primary) !important;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
         // Initialize ads after page load
         window.addEventListener('load', function() {
             initializeAds();
-            detectUserLanguage();
+            hideGoogleTranslateToolbar();
+            // Delayed language detection to ensure Google Translate is fully loaded
+            setTimeout(detectUserLanguage, 2000);
         });
     </script>
 </body>
